@@ -1,11 +1,31 @@
 - name: add sysdig Apt key
   apt_key: url=https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public state=present
+  when: ansible_os_family  == "Debian"
+
+- name: add sysdig RPM key
+  rpm_key: state=present key=https://s3.amazonaws.com/download.draios.com/DRAIOS-GPG-KEY.public
+  when: ansible_os_family  == "RedHat"
 
 - name: add sysdig repo
   apt_repository: repo='deb http://download.draios.com/stable/deb stable-$(ARCH)/' state=present
+  when: ansible_os_family  == "Debian"
+
+- name: add sysdig repo
+  get_url: url=http://download.draios.com/stable/rpm/draios.repo dest=/etc/yum.repos.d/draios.repo
+  when: ansible_os_family  == "RedHat"
 
 - name: install linux-headers
   apt: name='linux-headers-{{ ansible_kernel }}' state=present
+  when: ansible_os_family  == "Debian"
+
+- name: install linux-headers
+  yum: name='kernel-devel-{{ ansible_kernel }}' state=present
+  when: ansible_os_family  == "RedHat"
 
 - name: install sysdig
   apt: name=sysdig state=present
+  when: ansible_os_family  == "Debian"
+
+- name: install sysdig
+  yum: name=sysdig state=present
+  when: ansible_os_family  == "RedHat"
