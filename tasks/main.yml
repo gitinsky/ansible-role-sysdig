@@ -19,7 +19,7 @@
   when: ansible_os_family  == "Debian"
 
 - name: install linux-headers
-  yum: name='kernel-devel-{{ ansible_kernel }}' state=present
+  yum: name='kernel-devel' state=present
   when: ansible_os_family  == "RedHat"
 
 - name: install sysdig
